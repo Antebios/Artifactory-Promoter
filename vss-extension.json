@@ -1,0 +1,124 @@
+{
+    "manifestVersion": 1,
+    "public": false,
+    "id": "artifactory-promoter-extension",
+    "version": "0.1.0",
+    "name": "Artifactory Promoter",
+    "description": "An advance JFrog task to do promotion only.",
+    "publisher": "Richard Nunez",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "icons": {
+        "default": "images/extension-icon.png"
+    },
+    "scopes": [
+        "vso.build",
+        "vso.build_execute"
+    ],
+    "categories": ["Build and release"],
+    "tags": [
+        "JFrog",
+        "Artifactory",
+        "Artifact",
+        "Release",
+        "Promote"
+    ],
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    },
+    "links": {
+        "repository": {
+            "uri": "https://github.com/Antebios/Artifactory-Promoter"
+        }
+    },
+    "contributions": [
+        {
+            "id": "artifactory-service",
+            "description": "Service Endpoint type for Artifactory connections",
+            "type": "ms.vss-endpoint.service-endpoint-type",
+            "targets": [
+                "ms.vss-endpoint.endpoint-types"
+            ],
+            "properties": {
+                "name": "artifactoryService",
+                "displayName": "Artifactory",
+                "url": {
+                    "displayName": "Server URL",
+                    "helpText": "Specify the root URL of your Artifactory installation. For example, http://repo.jfrog.org/artifactory"
+                },
+                "dataSources": [
+                    {
+                        "name": "TestConnection",
+                        "endpointUrl": "{{endpoint.url}}/api/plugins",
+                        "resourceUrl": "",
+                        "resultSelector": "jsonpath:$.values[*]",
+                        "headers": [],
+                        "authenticationScheme": null
+                    }
+                ],
+                "authenticationSchemes": [
+                    {
+                        "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+                        "inputDescriptors": [
+                            {
+                                "id": "username",
+                                "name": "Username",
+                                "description": "Artifactory username with deploy permissions.",
+                                "inputMode": "textbox",
+                                "validation": {
+                                    "isRequired": false,
+                                    "dataType": "string"
+                                }
+                            },
+                            {
+                                "id": "password",
+                                "name": "Password",
+                                "description": "Password or API key of an Artifactory user with deploy permissions.",
+                                "inputMode": "passwordbox",
+                                "isConfidential": true,
+                                "validation": {
+                                    "isRequired": false,
+                                    "dataType": "string"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "artifactory-promoter-build-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "tasks/ArtifactoryPromoter"
+            }
+        }
+    ],
+    "files": [
+        {
+            "path": "artifactory-promoter.html",
+            "addressable": true
+        },
+        {
+            "path": "images",
+            "addressable": true
+        },
+        {
+            "path": "node_modules/vss-web-extension-sdk/lib",
+            "addressable": true,
+            "packagePath": "lib"
+        },
+        {
+
+            "path": "tasks/Artifactory-Promoter"
+        }
+    ]
+}
