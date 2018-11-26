@@ -73,7 +73,7 @@
             "helpMarkDown": "Select to Copy or Move the promoted artifacts and dependencies.",
             "options" : {
                 "true" : "Copy",
-                "false" : "Move",
+                "false" : "Move"
             }
         },
         {
@@ -83,14 +83,6 @@
             "defaultValue": "true",
             "required": true,
             "helpMarkDown": "Select to promote artifacts and dependencies. If this field is not selected, they will not be promoted, but instead only a promotion entry will be created."
-        },
-        {
-            "name": "includeDependencies",
-            "type": "boolean",
-            "label": "Include build dependencies",
-            "defaultValue": "false",
-            "required": true,
-            "helpMarkDown": "When selected the build dependencies will be promoted."
         },
         {
             "name": "dryRun",

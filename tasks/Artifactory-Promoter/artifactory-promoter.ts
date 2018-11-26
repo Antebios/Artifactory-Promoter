@@ -9,186 +9,199 @@ const stripTrailingSlash = (str) => {
       str;
 };
 
-let buildDefinition = tl.getVariable('Build.DefinitionName');
-let buildNumber = tl.getVariable('Build.BuildNumber');
+async function run() {
 
-// Get input parameters
-let artifactoryService = tl.getInput("artifactoryService", false);
-let artifactoryUrl = tl.getEndpointUrl(artifactoryService, false);
-    artifactoryUrl = stripTrailingSlash(artifactoryUrl);
-let artifactoryUser = tl.getEndpointAuthorizationParameter(artifactoryService, "username", true);
-let artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactoryService, "password", true);
+  let buildDefinition = tl.getVariable('Build.DefinitionName');
+  let buildNumber = tl.getVariable('Build.BuildNumber');
 
-let sourceRepo = tl.getInput("sourceRepo", true);
-let targetRepo = tl.getInput("targetRepo", true);
-
-let Status = tl.getInput("status", true);
-let Comment = tl.getInput("comment", true);
-let CopyArtifacts = tl.getInput("copy", true);
-let IncludeArtifacts = tl.getInput("artifacts", true);
-let IsDryRun = tl.getInput("dryRun", true);
-let IsFailFast = tl.getInput("failFast", true);
-
-//$artifactoryUrl = "http://motdbsdev0134.motivadev.dev:8081/artifactory"
-//$artifactoryEndpointName = "$($artifactoryUrl)/"
-//$buildName = "RA-Common"
-//$BuildNumberInput = "RA-Common-1.0.0"
-//$artifactoryUser = "mottfs-0276-s"
-//#$password = "AP5EeHVfvhBbHymL3F1mTkVi9TU" # richard-nunez
-//#$artifactoryPwd = "AP3pz2NpRQgSYvFpTdfsozxCsBe" # admin
-//$artifactoryPwd = "AP395oP4d1FxzRAxvGQgPYqHHj7" # mottfs-0276-s
-//$repository_source = "biztalk-msi-build-local"
-//$repository_target = "biztalk-msi-dev-local"
-
-//$IsDryRun = $false
-//$CopyArtifacts = $true
-//$IncludeArtifacts = $false
-//$IsFailFast = $true
-
-
-
-// Write-Host "Converting Login and Password to authenticatino object..."
-let options_auth = { user: artifactoryUser, password: artifactoryPassword };
-
-let Client = require('node-rest-client').Client;
-let client = new Client(options_auth);
-
-
-// Write-Host 'Entering JFrog Artifactory Copy task'
-console.log("Entering JFrog Artifactory Copy task");
-
-// # Get build artifacts
-let buildArtifactsUrl = artifactoryUrl + "/api/search/buildArtifacts";
-let bodyBuildArtifacts = {
-  buildName : buildDefinition,
-  buildNumber :  buildNumber,
-  repos : [
-    sourceRepo
-  ]
-};
-console.log("################## Json body to find build artifacts for build:");
-console.log(bodyBuildArtifacts);
-
-let args = {
-  data: { bodyBuildArtifacts },
-  headers: { "Content-Type": "application/json" }
-};
-
-let BuildArtifactsResults = client.post(buildArtifactsUrl, args, function (data, response) {
-  // parsed response body as js object
-  console.log(data);
-  // raw response
-  console.log(response);
-});
-// Now loop through each build artifact
-for (let _artifact of BuildArtifactsResults.results) {
-  console.log("");
-  let artifactObj = _artifact.downloadUri;
-  let artifactoryEndpointName = artifactoryUrl + "/";
-  let PathToArtifact = artifactObj.replace(artifactoryEndpointName,'');
-  console.log("Path to Source Artifact: " + PathToArtifact);
-
-  let PathToArtifactArray = PathToArtifact.split('/');
-  PathToArtifactArray[0] = targetRepo;
-  let NewTargetpath = PathToArtifactArray.join("/");
-  console.log("Path to Target Artifact: " + NewTargetpath);
-
-  // Now copy the individual artifact
-  let MethodToPromote: string = "move";
-  if (CopyArtifacts == "true") { MethodToPromote = "copy"; }
-  if (CopyArtifacts == "false") { MethodToPromote = "move"; }
-
-  let DryRunFlag: string = "0";
-  if (IsDryRun == "true") { DryRunFlag = "1"; }
-  if (IsDryRun == "false") { DryRunFlag = "0"; }
-  let copyArtifactUrl = `${artifactoryUrl}/api/${MethodToPromote}/${PathToArtifact}?to=/${NewTargetpath}&dry=${DryRunFlag}`;
-
-  let copyResult = client.post(copyArtifactUrl, function (data, response) {
-    // parsed response body as js object
-    console.log(data);
-    // raw response
-    console.log(response);
-  });
-  
-  copyResult.on('error', function (err) {
-    console.log('something went wrong on the request: ', err);
-  });;
-  
-  //   If ($copyResult.messages.level -eq "ERROR") {
-  //     Write-Host "#### Error message:"
-  //     Write-Error $copyResult.messages.message
-  //   }
-  //   else {
-  //     if ($copyResult.messages.message -like "*completed successfully*" ) {
-  //       Write-Host "#### Completed successfully message:"
-  //       Write-Host $copyResult.messages.message
-  //     }
-  //     else {
-  //       Write-Host "#### Other message:"
-  //       Write-Error $copyResult.messages.message
-  //     }
-  //   }
-
-  let bodyPromote = {
-    status : buildDefinition,
-    dryRun :  buildNumber,
-    repos : [
-      sourceRepo
-    ]
-  };
-  //   # Now create a promotion entry - manually
-  //   $bodyPromote = @{}
-  //   $bodyPromote.status = "Deployed"
-  //   $bodyPromote.dryRun = $IsDryRun
-  //   $bodyPromote.sourceRepo = "$repository_source"
-  //   $bodyPromote.targetRepo = "$repository_target"
-  //   $bodyPromote.copy = $CopyArtifacts
-  //   $bodyPromote.artifacts = $IncludeArtifacts
-  //   $bodyPromote.dependencies = $false
-  //   $bodyPromote.failFast = $IsFailFast
-  //   $jsonBody = ConvertTo-JSON $bodyPromote
-  //   Write-Host ""
-  //   Write-Host "#### Json body for creating deployment entry:"
-  //   Write-Host $jsonBody
-  //   $promotionUrl = [string]::Format("{0}/api/build/promote/{1}/{2}", $artifactoryUrl, $buildName, $BuildNumberInput)
-  //   Write-Host "Promotion URL: $promotionUrl"
-  //   try {
-  //     $promoteResult = ""
-  //     $promoteResult = Invoke-RestMethod -Uri $promotionUrl -Method Post -Headers $Headers -ContentType "application/json" -Body $jsonBody -ErrorVariable RespErr
+  // Get input parameters
+  let artifactoryService = tl.getInput("artifactoryService", false);
+  let artifactoryUrl = tl.getEndpointUrl(artifactoryService, false);
+  //let artifactoryUrl = "http://10.58.20.20:8081/artifactory/";
+      artifactoryUrl = stripTrailingSlash(artifactoryUrl);
+  let artifactoryUser = tl.getEndpointAuthorizationParameter(artifactoryService, "username", true);
+  let artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactoryService, "password", true);
+  // let artifactoryUser = "mottfs-0276-s";
+  // let artifactoryPassword = "M2T97drl";
       
-  //     #catch {$err=$_.Exception}
-  //     #$err | Get-Member -MemberType Property
-  //     #Write-Host "RespErr = $($RespErr)"
-    
-  //     If ($promoteResult.messages.level -eq "ERROR") {
-  //       # Is NOT Successful
-  //       Write-Error $promoteResult.messages.message
-  //     }
-  //     else {
-  //       # Is Successful
-  //       If (-Not ([string]::IsNullOrEmpty($promoteResult.messages))) {
-  //         Write-Info $promoteResult.messages.message
-  //       }
-  //       Write-Host "Promotion was Successful!"
-  //     }
-  //   }
-  //   catch [System.Net.WebException] {   
-  //     $respStream = $_.Exception.Response.GetResponseStream()
-  //     $reader = New-Object System.IO.StreamReader($respStream)
-  //     $respBody = $reader.ReadToEnd() | ConvertFrom-Json
-  //     #$respBody;
-  //     If ($IsFailFast -eq $false) {
-  //       If (-Not ([string]::IsNullOrEmpty($respBody.errors.message))) {
-  //         Write-Error $respBody.errors.message
-  //       }
-  //     }
-  //   }
-  //   ## end of Try
+  let sourceRepo = tl.getInput("sourceRepo", true);
+  let targetRepo = tl.getInput("targetRepo", true);
+  let Status = tl.getInput("status", true);
+  let PromoteComment = tl.getInput("comment", true);
+  let CopyArtifacts = tl.getInput("copy", true);
+  let IncludeArtifacts = tl.getInput("artifacts", true);
+  let IncludeDependencies = tl.getInput("includeDependencies", true);
+  let IsDryRun = tl.getInput("dryRun", true);
+  let IsFailFast = tl.getInput("failFast", true);
 
+  // let sourceRepo = tl.getVariable("sourceRepo");
+  // let targetRepo = tl.getVariable("targetRepo");
+  // let Status = tl.getVariable("status");
+  // let Comment = tl.getVariable("comment");
+  // let CopyArtifacts = tl.getVariable("copy");
+  // let IncludeArtifacts = tl.getVariable("artifacts");
+  // // let IncludeDependencies = tl.getVariable("includeDependencies");
+  // let IsDryRun = tl.getVariable("dryRun");
+  // let IsFailFast = tl.getVariable("failFast");
+
+  //$artifactoryUrl = "http://motdbsdev0134.motivadev.dev:8081/artifactory"
+  //$artifactoryEndpointName = "$($artifactoryUrl)/"
+  //$buildName = "RA-Common"
+  //$BuildNumberInput = "RA-Common-1.0.0"
+  //$artifactoryUser = "mottfs-0276-s"
+  //#$password = "AP5EeHVfvhBbHymL3F1mTkVi9TU" # richard-nunez
+  //#$artifactoryPwd = "AP3pz2NpRQgSYvFpTdfsozxCsBe" # admin
+  //$artifactoryPwd = "AP395oP4d1FxzRAxvGQgPYqHHj7" # mottfs-0276-s
+  //$repository_source = "biztalk-msi-build-local"
+  //$repository_target = "biztalk-msi-dev-local"
+
+  //$IsDryRun = $false
+  //$CopyArtifacts = $true
+  //$IncludeArtifacts = $false
+  //$IsFailFast = $true
+
+
+
+  // Write-Host "Converting Login and Password to authenticatino object..."
+  let options_auth = { user: artifactoryUser, password: artifactoryPassword };
+
+  let Client = require('node-rest-client').Client;
+  let client = new Client(options_auth);
+
+
+  // Write-Host 'Entering JFrog Artifactory Copy task'
+  console.log("Entering Artifactory Promotion task");
+
+  // # Get build artifacts
+  let buildArtifactsUrl = artifactoryUrl + "/api/search/buildArtifacts";
+  let args = {
+    data: { "buildName" :buildDefinition,
+            "buildNumber" :  buildNumber,
+            "repos" : [ sourceRepo ] },
+    headers: { "Content-Type": "application/json", "Accept" : "application/json" }
+  };
+  console.log("################## Json body to find build artifacts for build:");
+  console.log(args);
+
+  console.log("About to get artifacts with url: " + buildArtifactsUrl);
+  // let BuildArtifactsResults = 
+  client.post(buildArtifactsUrl, args, function (data, response) {
+    if (data.hasOwnProperty("errors")) {
+      console.log("The search for build artifacts results in a Failure with the following results:");
+      console.log(data);
+      let errorMessage = "The search for build artifacts results in a Failure with the following results: " + data.errors[0].message;
+      tl.setResult(tl.TaskResult.Failed, errorMessage);
+      return;
+    } else {
+      console.log("The search for build artifacts results was a success.");
+      console.log(data);
+
+      //Now loop through each build artifact
+      for (let _artifact of data.results) {
+        console.log("");
+        let artifactObj = _artifact.downloadUri;
+        let artifactoryEndpointName = artifactoryUrl + "/";
+        let PathToArtifact = artifactObj.replace(artifactoryEndpointName,'');
+        console.log("Path to Source Artifact: " + PathToArtifact);
+        
+        let PathToArtifactArray = PathToArtifact.split('/');
+        PathToArtifactArray[0] = targetRepo;
+        let NewTargetpath = PathToArtifactArray.join("/");
+        console.log("Path to Target Artifact: " + NewTargetpath);
+
+        // Now copy the individual artifact
+        let MethodToPromote: string = "move";
+        if (CopyArtifacts == "true") { MethodToPromote = "copy"; }
+        if (CopyArtifacts == "false") { MethodToPromote = "move"; }
+
+        let DryRunFlag: string = "0";
+        if (IsDryRun == "true") { DryRunFlag = "1"; }
+        if (IsDryRun == "false") { DryRunFlag = "0"; }
+        let copyArtifactUrl = `${artifactoryUrl}/api/${MethodToPromote}/${PathToArtifact}?to=/${NewTargetpath}&dry=${DryRunFlag}`;
+
+        console.log("Promote Url: " + copyArtifactUrl)
+        let args = {
+          headers: { "Accept" : "application/json" }
+        };
+        let copyResult = client.post(copyArtifactUrl, args, function (data, response) {
+          // parsed response body as js object
+          let returnData = JSON.parse(data.toString('utf8'));
+
+          if (returnData.hasOwnProperty("errors")) {
+            console.log("The movement for build artifacts resulted in a Failure with the following results:");
+            console.log(returnData);
+            let errorMessage = "The movement for build artifacts resulted in a Failure with the following results: " + returnData.errors[0].message;
+            tl.setResult(tl.TaskResult.Failed, errorMessage);
+            return;
+          } else {
+            if (returnData.messages[0].level == 'ERROR') {
+              console.log("The movement for build artifacts resulted in a Failure with the following results:");
+              console.log(returnData);
+              let errorMessage = "The movement for build artifacts resulted in a Failure with the following results: " + returnData.messages[0].message;
+              tl.setResult(tl.TaskResult.Failed, errorMessage);
+              return;
+            } else {
+              console.log("The movement for build artifacts results was a success.");
+
+              // # Now create a promotion entry - manually
+              let args = {
+                data: { "status" : Status,
+                        "comment" : PromoteComment, 
+                        "dryRun" : IsDryRun,
+                        "sourceRepo" : sourceRepo,
+                        "targetRepo" : targetRepo,
+                        "copy" : CopyArtifacts,
+                        "artifacts" : IncludeArtifacts,
+                        "dependencies" : false,
+                        "failFast" : IsFailFast},
+                headers: { "Content-Type": "application/json", "Accept" : "application/json" }
+              };
+              
+              console.log("");
+              console.log("################## Json body for creating deployment entry:");
+              console.log(args);
+              let promotionUrl = `${artifactoryUrl}/api/build/promote/${buildDefinition}/${buildNumber}`;
+              console.log("Promotion URL: " + promotionUrl);
+              let promoteResult = client.post(promotionUrl, args, function (data, response) {
+                if (data.hasOwnProperty("errors")) {
+                  console.log("The promotion function failed with the following results:");
+                  console.log(data);
+                  let errorMessage = "The promotion function failed with the following results: " + data.errors[0].message;
+                  tl.setResult(tl.TaskResult.Failed, errorMessage);
+                  return;
+                } else {
+                  //let returnData = JSON.parse(data.toString('utf8'));
+                  if(data.messages.length > 0) {
+                    if (returnData.messages[0].level == 'ERROR') {
+                      console.log("The promotion function for build artifacts resulted in a Failure with the following results:");
+                      let errorMessage = "The promotion function for build artifacts resulted in a Failure with the following results: " + returnData.messages[0].message;
+                      tl.setResult(tl.TaskResult.Failed, errorMessage);
+                      return;
+                    } else {
+                      console.log("The promotion function for build artifacts results was a success.");
+                      tl.setResult(tl.TaskResult.Succeeded, "The promotion function for build artifacts results was a success.");
+                      return;
+                    }
+                    console.log(returnData);
+                  } else {
+                    console.log("The promotion function for build artifacts results was a success.");
+                    tl.setResult(tl.TaskResult.Succeeded, "The promotion function for build artifacts results was a success.");
+                    return;
+                  }
+                }
+              });
+              promoteResult.on('error', function (err) {
+                console.log('Something went wrong with the Promotion request: ', err);
+              });
+            }
+          }
+        });
+        copyResult.on('error', function (err) {
+          console.log('Something went wrong with the Copy/Move request: ', err);
+        });
+      }
+    }
+  });
 }
 
-
-
-
-
-
+run();
