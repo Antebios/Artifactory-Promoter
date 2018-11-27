@@ -7,9 +7,9 @@ This extension can be used with the Azure DevOps online service (formerly VSTS) 
 # Building
 
 > npm run-script preinstall
-
+>
 > npm run-script install
-
+>
 > npm run-script build
 
 I need to resolve the build errors, but you can ignore those for now.
