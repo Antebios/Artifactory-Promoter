@@ -1,34 +1,32 @@
 {
-  "name": "Artifactory-Promoter",
+  "name": "artifactory-promoter",
   "version": "1.0.0",
   "description": "Azure DevOps extention that adds advance capabilities for Artifactory Promotion task only.",
-  "main": "index.js",
   "scripts": {
     "preinstall": "cd buildScripts && npm i",
     "install": "node buildScripts/build.js",
-    "create": "npm i && tfx extension create",
-    "test": "npm i && npm t --prefix=tests",
-    "publish-private": "npm i && bash buildScripts/publish-private.sh"
+    "build": "tsc",
+    "build-task": "tsc -p tasks\\Artifactory-Promoter",
+    "create": "tfx extension create"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Antebios/Artifactory-Promoter.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Richard Nunez",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Antebios/Artifactory-Promoter/issues"
   },
   "homepage": "https://github.com/Antebios/Artifactory-Promoter#readme",
   "dependencies": {
-    "azure-pipelines-task-lib": "^2.7.5",
-    "node-rest-client": "^3.1.0",
+    "azure-pipelines-task-lib": "^2.7.7",
     "vss-web-extension-sdk": "^5.141.0",
     "tfx-cli": "^0.6.3"
   },
   "devDependencies": {
-    "@types/node": "^10.12.9",
+    "@types/node": "^10.12.10",
     "@types/q": "^1.5.1"
   }
 }

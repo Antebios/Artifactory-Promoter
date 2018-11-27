@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "public": false,
     "id": "artifactory-promoter-extension",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "name": "Artifactory Promoter",
     "description": "An advance JFrog task to do promotion only.",
     "publisher": "MacrossPlusInc",
@@ -23,6 +23,7 @@
         "JFrog",
         "Artifactory",
         "Artifact",
+        "Artifacts",
         "Release",
         "Promote"
     ],
@@ -103,10 +104,6 @@
         }
     ],
     "files": [
-        {
-            "path": "artifactory-promoter.html",
-            "addressable": true
-        },
         {
             "path": "images",
             "addressable": true

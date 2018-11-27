@@ -3,9 +3,7 @@ const rimraf = require('rimraf');
 const fs = require('fs');
 const path = require('path');
 
-//cleanExecNpm('pack', 'artifactory-tasks-utils');
 installTasks();
-//cleanExecNpm('i', 'tests');
 
 /**
  * Install tasks.
@@ -29,7 +27,6 @@ function installTasks() {
 function clean(cwd) {
     rimraf.sync(path.join(cwd, 'node_modules'));
     rimraf.sync(path.join(cwd, 'package-lock.json'));
-    rimraf.sync(path.join(cwd, '*.tgz'));
 }
 
 /**

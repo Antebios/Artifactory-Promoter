@@ -1,7 +1,4 @@
 import tl = require('azure-pipelines-task-lib/task');
-//import * as tl from 'azure-pipelines-task-lib';
-//import rc = require('node-rest-client').Client;
-//vimport * as utils from '../../artifactory-tasks-utils'
 
 const stripTrailingSlash = (str) => {
   return str.endsWith('/') ?
