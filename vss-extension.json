@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "public": false,
     "id": "artifactory-promoter-extension",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "name": "Artifactory Promoter",
     "description": "An advance JFrog task to do promotion only.",
     "publisher": "MacrossPlusInc",
