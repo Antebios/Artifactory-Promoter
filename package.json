@@ -1,10 +1,14 @@
 {
   "name": "Artifactory-Promoter",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Azure DevOps extention that adds advance capabilities for Artifactory Promotion task only.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preinstall": "cd buildScripts && npm i",
+    "install": "node buildScripts/build.js",
+    "create": "npm i && tfx extension create",
+    "test": "npm i && npm t --prefix=tests",
+    "publish-private": "npm i && bash buildScripts/publish-private.sh"
   },
   "repository": {
     "type": "git",
@@ -20,7 +24,8 @@
   "dependencies": {
     "azure-pipelines-task-lib": "^2.7.5",
     "node-rest-client": "^3.1.0",
-    "vss-web-extension-sdk": "^5.141.0"
+    "vss-web-extension-sdk": "^5.141.0",
+    "tfx-cli": "^0.6.3"
   },
   "devDependencies": {
     "@types/node": "^10.12.9",

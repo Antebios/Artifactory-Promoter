@@ -15,34 +15,36 @@ async function run() {
   let buildNumber = tl.getVariable('Build.BuildNumber');
 
   // Get input parameters
-  let artifactoryService = tl.getInput("artifactoryService", false);
-  let artifactoryUrl = tl.getEndpointUrl(artifactoryService, false);
-  //let artifactoryUrl = "http://10.58.20.20:8081/artifactory/";
-      artifactoryUrl = stripTrailingSlash(artifactoryUrl);
-  let artifactoryUser = tl.getEndpointAuthorizationParameter(artifactoryService, "username", true);
-  let artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactoryService, "password", true);
-  // let artifactoryUser = "mottfs-0276-s";
-  // let artifactoryPassword = "M2T97drl";
-      
-  let sourceRepo = tl.getInput("sourceRepo", true);
-  let targetRepo = tl.getInput("targetRepo", true);
-  let Status = tl.getInput("status", true);
-  let PromoteComment = tl.getInput("comment", true);
-  let CopyArtifacts = tl.getInput("copy", true);
-  let IncludeArtifacts = tl.getInput("artifacts", true);
-  let IncludeDependencies = tl.getInput("includeDependencies", true);
-  let IsDryRun = tl.getInput("dryRun", true);
-  let IsFailFast = tl.getInput("failFast", true);
+  // let artifactoryService = tl.getInput("artifactoryService", false);
+  // let artifactoryUrl = tl.getEndpointUrl(artifactoryService, false);
+  //     artifactoryUrl = stripTrailingSlash(artifactoryUrl);
+  // let artifactoryUser = tl.getEndpointAuthorizationParameter(artifactoryService, "username", true);
+  // let artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactoryService, "password", true);
 
-  // let sourceRepo = tl.getVariable("sourceRepo");
-  // let targetRepo = tl.getVariable("targetRepo");
-  // let Status = tl.getVariable("status");
-  // let Comment = tl.getVariable("comment");
-  // let CopyArtifacts = tl.getVariable("copy");
-  // let IncludeArtifacts = tl.getVariable("artifacts");
-  // // let IncludeDependencies = tl.getVariable("includeDependencies");
-  // let IsDryRun = tl.getVariable("dryRun");
-  // let IsFailFast = tl.getVariable("failFast");
+      
+  // let sourceRepo = tl.getInput("sourceRepo", true);
+  // let targetRepo = tl.getInput("targetRepo", true);
+  // let Status = tl.getInput("status", true);
+  // let PromoteComment = tl.getInput("comment", true);
+  // let CopyArtifacts = tl.getInput("copy", true);
+  // let IncludeArtifacts = tl.getInput("artifacts", true);
+  // let IncludeDependencies = tl.getInput("includeDependencies", true);
+  // let IsDryRun = tl.getInput("dryRun", true);
+  // let IsFailFast = tl.getInput("failFast", true);
+
+  let artifactoryUrl = "http://10.58.20.20:8081/artifactory/";
+  artifactoryUrl = stripTrailingSlash(artifactoryUrl);
+  let artifactoryUser = "mottfs-0276-s";
+  let artifactoryPassword = "M2T97drl";
+  let sourceRepo = tl.getVariable("sourceRepo");
+  let targetRepo = tl.getVariable("targetRepo");
+  let Status = tl.getVariable("status");
+  let PromoteComment = tl.getVariable("comment");
+  let CopyArtifacts = tl.getVariable("copy");
+  let IncludeArtifacts = tl.getVariable("artifacts");
+  // let IncludeDependencies = tl.getVariable("includeDependencies");
+  let IsDryRun = tl.getVariable("dryRun");
+  let IsFailFast = tl.getVariable("failFast");
 
   //$artifactoryUrl = "http://motdbsdev0134.motivadev.dev:8081/artifactory"
   //$artifactoryEndpointName = "$($artifactoryUrl)/"
@@ -117,6 +119,7 @@ async function run() {
         let DryRunFlag: string = "0";
         if (IsDryRun == "true") { DryRunFlag = "1"; }
         if (IsDryRun == "false") { DryRunFlag = "0"; }
+        if (IncludeArtifacts == "false") { DryRunFlag = "1"; }
         let copyArtifactUrl = `${artifactoryUrl}/api/${MethodToPromote}/${PathToArtifact}?to=/${NewTargetpath}&dry=${DryRunFlag}`;
 
         console.log("Promote Url: " + copyArtifactUrl)
@@ -151,7 +154,7 @@ async function run() {
                         "sourceRepo" : sourceRepo,
                         "targetRepo" : targetRepo,
                         "copy" : CopyArtifacts,
-                        "artifacts" : IncludeArtifacts,
+                        "artifacts" : false,
                         "dependencies" : false,
                         "failFast" : IsFailFast},
                 headers: { "Content-Type": "application/json", "Accept" : "application/json" }

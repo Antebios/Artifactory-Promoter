@@ -2,10 +2,10 @@
     "manifestVersion": 1,
     "public": false,
     "id": "artifactory-promoter-extension",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "name": "Artifactory Promoter",
     "description": "An advance JFrog task to do promotion only.",
-    "publisher": "Richard Nunez",
+    "publisher": "MacrossPlusInc",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
@@ -18,7 +18,7 @@
         "vso.build",
         "vso.build_execute"
     ],
-    "categories": ["Build and release"],
+    "categories": ["Azure Pipelines", "Azure Artifacts"],
     "tags": [
         "JFrog",
         "Artifactory",
@@ -98,7 +98,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "tasks/ArtifactoryPromoter"
+                "name": "tasks/Artifactory-Promoter"
             }
         }
     ],

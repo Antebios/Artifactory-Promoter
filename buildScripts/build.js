@@ -3,9 +3,9 @@ const rimraf = require('rimraf');
 const fs = require('fs');
 const path = require('path');
 
-cleanExecNpm('pack', 'artifactory-tasks-utils');
+//cleanExecNpm('pack', 'artifactory-tasks-utils');
 installTasks();
-cleanExecNpm('i', 'tests');
+//cleanExecNpm('i', 'tests');
 
 /**
  * Install tasks.
