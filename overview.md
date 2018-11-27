@@ -1,7 +1,10 @@
 ## Overview
-**Artifactory Promoter**
+**Artifactory Promoter** is an Azure DevOps extension that adds advance capabilities for Artifactory promotion task only.  This tasks copies or moves artifacts from one repository to another within the same server, using the build associated build name defined in the Release Pipeline.  What makes this task unique is that it does not promote all of the build's artifacts, but only those for a defined source.  So in case your build produces two types of artifacts into two artifactory separate repositories, but you only want to promote one artifact, now you can promote just that one artifact instead of both artifacts sourced from two repositories and end up in the same target repository, which is wrong.
 
-# How to use the extension
+## Documentation and Source Code
+It is all here on [GitHub](https://github.com/Antebios/Artifactory-Promoter).
+
+## How to use the extension
 In your Release Pipeline add a Step.  Under the "Utility" find "Artifactory Promoter" and add it to your deployment step.
 
 ![ExtensionForm](./images/marketplace/promoter-1.png)
@@ -47,6 +50,6 @@ If you go into your Release Pipeline and then into the logs of the release steps
 
 YOU ARE DONE!
 
-[Learn more](https://jfrog.com/artifactory/)
+## What is Artifactory
 
-
+[Learn more](https://jfrog.com/artifactory/) about what a great product Artifactory can be for your organization.  Are you using a network share for your build artifact needs and it getting unwieldy? Need a place to store NuGet packages?  Need an automated process to clean-up pre-release artifacts without having you need to worry about it?  Need to secure those releases for a long time and make sure no one deletes them?  Need structure in a chaotic world?  Try Artifactory.
