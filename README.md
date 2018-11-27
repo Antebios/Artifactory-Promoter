@@ -76,7 +76,7 @@ If you go into your Release Pipeline and then into the logs of the release steps
 YOU ARE DONE!
 
 # Who I want to thank
-I want to thank [JFrog](https://jfrog.com) for making a great product that enjoy using.  This is my very first VSTS/Azure DevOps extension so I expect to have gotten many things wrong.  I want to thank JFrog again because I took their extension source code apart to see how it was put together and in general how to create an extension.  And I couldn't have done this without Google searches and Stackoverflow and GitHub.  I had a ton of questions and roadblocks and I want to give back to the community that has given me so much.  I FREAKING ENJOY DEVOPS!
+I want to thank [JFrog](https://jfrog.com) for making a great product that enjoy using.  This is my very first VSTS/Azure DevOps extension so I expect to have gotten many things wrong.  I want to thank JFrog again because I took their extension source code apart to see how it was put together and in general how to create an extension.  And I couldn't have done this without Google searches, Stackoverflow, and GitHub.  I had a ton of questions and roadblocks so I want to give back to the community that has given me so much.  I FREAKING ENJOY DEVOPS!
 
 ## What is Artifactory
 
