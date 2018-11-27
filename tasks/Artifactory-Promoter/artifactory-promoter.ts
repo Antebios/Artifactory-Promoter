@@ -103,7 +103,10 @@ async function run() {
         let DryRunFlag: string = "0";
         if (IsDryRun == "true") { DryRunFlag = "1"; }
         if (IsDryRun == "false") { DryRunFlag = "0"; }
-        if (IncludeArtifacts == "false") { DryRunFlag = "1"; }
+        if (IncludeArtifacts == "false") { 
+          DryRunFlag = "1";
+          console.log("Please be aware that NO artifacts will be copied/moved since Promote Artifacts checkbox is unchecked.");
+        }
         let copyArtifactUrl = `${artifactoryUrl}/api/${MethodToPromote}/${PathToArtifact}?to=/${NewTargetpath}&dry=${DryRunFlag}`;
 
         console.log("Promote Url: " + copyArtifactUrl)
@@ -147,6 +150,7 @@ async function run() {
               console.log("");
               console.log("################## Json body for creating deployment entry:");
               console.log(args);
+              console.log("Please note: artifacts and dependencies will always be FALSE since this step is only making a promotion entry.");
               let promotionUrl = `${artifactoryUrl}/api/build/promote/${buildDefinition}/${buildNumber}`;
               console.log("Promotion URL: " + promotionUrl);
               let promoteResult = client.post(promotionUrl, args, function (data, response) {
