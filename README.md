@@ -37,7 +37,7 @@ This extension depends on the "Artifactory" service connection to be present.  T
 ## Adding the step
 In your Release Pipeline add a Step.  Under the "Utility" find "Artifactory Promoter" and add it to your deployment step.
 
-![ExtensionForm](./images/marketplace/promoter-1.png)
+![ExtensionForm](images/marketplace/promoter-1.png)
 
 1. Display name = Default is "Artifactory Promoter", but you can change it to anything.
 
@@ -62,21 +62,21 @@ In your Release Pipeline add a Step.  Under the "Utility" find "Artifactory Prom
 # What the extension does
 For this example, this extension will search for the build "RA-Common", and the build number "RA-Common-1.0.0", and for any associated artifacts in the repository "biztalk-msi-build-local".  The artifacts associated with the build are these:
 
-![ExtensionForm](./images/marketplace/promoter-2.png)
+![ExtensionForm](images/marketplace/promoter-2.png)
 
 But the artifact returned will only be the MSI package.  Now that MSI package is **copied** to the target repository:
 
-![ExtensionForm](./images/marketplace/promoter-4.png)
+![ExtensionForm](images/marketplace/promoter-4.png)
 
 Notice that the directory structure is kept the same.
 
 Now that all the artifacts have been promoted, a promotion entry is created and associated with the build in Artifactory:
 
-![ExtensionForm](./images/marketplace/promoter-3.png)
+![ExtensionForm](images/marketplace/promoter-3.png)
 
 If you go into your Release Pipeline and then into the logs of the release steps this will be your log
 
-![ExtensionForm](./images/marketplace/promoter-5.png)
+![ExtensionForm](images/marketplace/promoter-5.png)
 
 YOU ARE DONE!
 
