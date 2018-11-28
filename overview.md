@@ -4,6 +4,9 @@
 ## Documentation and Source Code
 It is all here on [GitHub](https://github.com/Antebios/Artifactory-Promoter).
 
+## Requirements
+This extension depends on the "Artifactory" service connection to be present.  This is installed by the [JFrog Artifactory extension](https://marketplace.visualstudio.com/items?itemName=JFrog.jfrog-artifactory-vsts-extension).  Since the **Artifactory Promoter** extension relies on build information in the Artifactory server and that is stored using the **JFrog Artifactory** extension, then it is a safe bet to assume that the service connection exists, so my extension makes use of it (no need to create duplicate service connections).
+
 ## How to use the extension
 In your Release Pipeline add a Step.  Under the "Utility" find "Artifactory Promoter" and add it to your deployment step.
 

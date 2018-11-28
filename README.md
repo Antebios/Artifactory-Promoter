@@ -30,6 +30,10 @@ The finished package will be placed in the root of the project and be named "Mac
 I have not included tests with this project, for right now.
 
 # How to use the extension
+
+## Requirements
+This extension depends on the "Artifactory" service connection to be present.  This is installed by the [JFrog Artifactory extension](https://marketplace.visualstudio.com/items?itemName=JFrog.jfrog-artifactory-vsts-extension).  Since the **Artifactory Promoter** extension relies on build information in the Artifactory server and that is stored using the **JFrog Artifactory** extension, then it is a safe bet to assume that the service connection exists, so my extension makes use of it (no need to create duplicate service connections).
+
 In your Release Pipeline add a Step.  Under the "Utility" find "Artifactory Promoter" and add it to your deployment step.
 
 ![ExtensionForm](./images/marketplace/promoter-1.png)
