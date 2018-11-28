@@ -1,67 +1,69 @@
 {
-    "manifestVersion": 1,
-    "public": true,
-    "id": "artifactory-promoter-extension",
-    "version": "0.1.7",
-    "name": "Artifactory Promoter",
-    "description": "An advance JFrog task to do promotion only.",
-    "publisher": "MacrossPlusInc",
-    "targets": [
-        {
-            "id": "Microsoft.VisualStudio.Services"
-        }
-    ],
-    "icons": {
-        "default": "images/extension-icon-transparent.png"
+  "manifestVersion": 1,
+  "public": true,
+  "id": "artifactory-promoter-extension",
+  "version": "0.1.8",
+  "name": "Artifactory Promoter",
+  "description": "An advance JFrog task to do promotion only.",
+  "publisher": "MacrossPlusInc",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "icons": {
+    "default": "images/extension-icon-transparent.png"
+  },
+  "scopes": [
+    "vso.build",
+    "vso.build_execute"
+  ],
+  "categories": ["Azure Pipelines", "Azure Artifacts"],
+  "tags": [
+    "JFrog",
+    "Artifactory",
+    "Artifact",
+    "Artifacts",
+    "Release",
+    "Promote"
+  ],
+  "content": {
+    "details": { "path": "overview.md" },
+    "license": { "path": "LICENSE" }
+  },
+  "links": {
+    "repository": {"uri": "https://github.com/Antebios/Artifactory-Promoter"  },
+    "support": { "uri": "https://github.com/Antebios/Artifactory-Promoter/issues" }
+  },
+  "repository": { 
+    "type": "git", 
+    "uri": "https://github.com/Antebios/Artifactory-Promoter" 
+  }, 
+  "contributions": [
+    {
+      "id": "artifactory-promoter-build-task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "tasks/Artifactory-Promoter"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "images",
+      "addressable": true
     },
-    "scopes": [
-        "vso.build",
-        "vso.build_execute"
-    ],
-    "categories": ["Azure Pipelines", "Azure Artifacts"],
-    "tags": [
-        "JFrog",
-        "Artifactory",
-        "Artifact",
-        "Artifacts",
-        "Release",
-        "Promote"
-    ],
-    "content": {
-        "details": {
-            "path": "overview.md"
-        }
+    {
+      "path": "node_modules/vss-web-extension-sdk/lib",
+      "addressable": true,
+      "packagePath": "lib"
     },
-    "links": {
-        "repository": {
-            "uri": "https://github.com/Antebios/Artifactory-Promoter"
-        }
-    },
-    "contributions": [
-        {
-            "id": "artifactory-promoter-build-task",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "tasks/Artifactory-Promoter"
-            }
-        }
-    ],
-    "files": [
-        {
-            "path": "images",
-            "addressable": true
-        },
-        {
-            "path": "node_modules/vss-web-extension-sdk/lib",
-            "addressable": true,
-            "packagePath": "lib"
-        },
-        {
+    {
 
-            "path": "tasks/Artifactory-Promoter"
-        }
-    ]
+      "path": "tasks/Artifactory-Promoter"
+    }
+  ]
 }
